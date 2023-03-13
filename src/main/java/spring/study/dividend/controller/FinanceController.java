@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import spring.study.dividend.model.ScrapedResult;
 import spring.study.dividend.service.FinanceService;
 
 
@@ -18,6 +19,7 @@ public class FinanceController {
 
     @GetMapping("/dividend/{companyName}")
     public ResponseEntity<?> searchFinance(@PathVariable String companyName) {
-        return ResponseEntity.ok(financeService.getDividendByCompanyName(companyName));
+        ScrapedResult result = financeService.getDividendByCompanyName(companyName);
+        return ResponseEntity.ok(result);
     }
 }
