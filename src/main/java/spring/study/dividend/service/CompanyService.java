@@ -1,6 +1,5 @@
 package spring.study.dividend.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.Trie;
 import org.springframework.data.domain.Page;
@@ -53,7 +52,7 @@ public class CompanyService {
         // 스크래핑 결과
         CompanyEntity companyEntity = companyRepository.save(new CompanyEntity(company));
 
-        List<DividendEntity> dividendEntities = scrapedResult.getDividendEntities().stream()
+        List<DividendEntity> dividendEntities = scrapedResult.getDividends().stream()
                 .map(e -> new DividendEntity(companyEntity.getId(), e))
                 .collect(Collectors.toList());
 
