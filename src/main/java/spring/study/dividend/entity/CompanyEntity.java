@@ -1,8 +1,9 @@
-package spring.study.dividend.domain;
+package spring.study.dividend.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import spring.study.dividend.model.Company;
 
 import javax.persistence.*;
 
@@ -17,4 +18,9 @@ public class CompanyEntity {
 
     @Column(unique = true)
     private String ticker;
+
+    public CompanyEntity(Company company) {
+        this.name = company.getName();
+        this.ticker = company.getTicker();
+    }
 }
