@@ -2,6 +2,7 @@ package spring.study.dividend.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import spring.study.dividend.entity.CompanyEntity;
@@ -14,6 +15,8 @@ import spring.study.dividend.scraper.Scraper;
 
 import java.util.List;
 
+import static spring.study.dividend.model.constants.CacheKey.KEY_FINANCE;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +25,8 @@ public class ScraperScheduler {
     private final Scraper yahooFinanceScraper;
     private final DividendRepository dividendRepository;
 
+    // 일정 주기마다 수행
+    @CacheEvict(value = KEY_FINANCE, allEntries = true)
     @Scheduled(cron = "${scheduler.scrap.yahoo}")
     public void yahooFinanceScheduling(){
         log.info("scraping scheduler is started");
@@ -31,12 +36,9 @@ public class ScraperScheduler {
 
         for (CompanyEntity company : companies) {
             log.info("scraping scheduler is started -> " + company.getName());
-            ScrapedResult scrapedResult = yahooFinanceScraper.scrap(
-                    Company.builder()
-                            .name(company.getName())
-                            .ticker(company.getTicker())
-                            .build()
-            );
+            ScrapedResult scrapedResult = yahooFinanceScraper
+                    .scrap(new Company(company.getName(), company.getTicker()));
+
             scrapedResult.getDividends().stream()
                     .map(e -> new DividendEntity(company.getId(), e))
                     .forEach(e -> {
