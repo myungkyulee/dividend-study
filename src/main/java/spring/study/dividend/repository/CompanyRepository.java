@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface CompanyRepository extends JpaRepository<CompanyEntity, Long> {
     Optional<CompanyEntity> findByName(String name);
+    Optional<CompanyEntity> findByTicker(String ticker);
     boolean existsByTicker(String ticker);
     // IgnoreCase는 대소문자에 상관없이 찾으라는 뜻
     Page<CompanyEntity> findByNameStartingWithIgnoreCase(String s, Pageable pageable);
