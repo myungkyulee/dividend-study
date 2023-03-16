@@ -1,6 +1,7 @@
 package spring.study.dividend.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,7 @@ import spring.study.dividend.model.Auth;
 import spring.study.dividend.security.TokenProvider;
 import spring.study.dividend.service.MemberService;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class AuthController {
     public ResponseEntity<?> signin(@RequestBody Auth.SignIn request) {
         MemberEntity member = memberService.authenticate(request);
         String token = tokenProvider.generateToken(member.getUsername(), member.getRoles());
+        log.info("user login -> " + request.getUsername());
         return ResponseEntity.ok(token);
     }
 }

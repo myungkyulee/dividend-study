@@ -25,14 +25,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         String token = resolveTokenFromRequest(request);
         if (tokenProvider.validateToken(token)) {
-            log.info("[JwtAuthenticationFilter] validate ok");
             Authentication auth = tokenProvider.getAuthentication(token);
-
-            log.info("[JwtAuthenticationFilter] validate ok"+ auth.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
+
+            log.info(String.format("[%s] -> %s",
+                    tokenProvider.getUsername(token), request.getRequestURI()));
         }
         filterChain.doFilter(request, response);
     }
